@@ -1,0 +1,6 @@
+applications:
+  - name: smart-home-energy-advisor
+    memory: 512M
+    instances: 1
+    buildpack: python_buildpack
+    command: gunicorn app:app --bind 0.0.0.0:$PORT --workers 2 --timeout 120

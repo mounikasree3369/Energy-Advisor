@@ -1,0 +1,36 @@
+2026-07-11 23:19:35 [INFO] httpx: HTTP Request: POST https://iam.cloud.ibm.com/identity/token "HTTP/1.1 200 OK"
+2026-07-11 23:19:36 [INFO] httpx: HTTP Request: GET https://api.dataplatform.cloud.ibm.com/v2/projects/df4e6479-e878-4da0-9bc2-5a96ecf73c9b "HTTP/1.1 200 OK"
+2026-07-11 23:19:36 [INFO] ibm_watsonx_ai.client: Client successfully initialized
+2026-07-11 23:19:36 [INFO] ibm_watsonx_ai.wml_resource: Project 'df4e6479-e878-4da0-9bc2-5a96ecf73c9b' is already set as the default project. Skipping API request.
+2026-07-11 23:19:36 [INFO] modules.watsonx_client: WatsonxClient initialized with model: ibm/granite-3-1-8b-base
+2026-07-11 23:19:36 [INFO] __main__: Smart Home Energy Advisor v2.0 starting...
+2026-07-11 23:19:36 [INFO] __main__: Granite model status: {'model_id': 'ibm/granite-3-1-8b-base', 'url': 'https://us-south.ml.cloud.ibm.com', 'initialized': True, 'mode': 'live', 'sdk_available': True}
+2026-07-11 23:19:36 [INFO] __main__: Starting server on http://0.0.0.0:5000 (debug=True)
+2026-07-11 23:19:37 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.55.104:5000
+2026-07-11 23:19:37 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2026-07-11 23:19:37 [INFO] werkzeug:  * Restarting with stat
+2026-07-11 23:19:39 [INFO] httpx: HTTP Request: POST https://iam.cloud.ibm.com/identity/token "HTTP/1.1 200 OK"
+2026-07-11 23:19:40 [INFO] httpx: HTTP Request: GET https://api.dataplatform.cloud.ibm.com/v2/projects/df4e6479-e878-4da0-9bc2-5a96ecf73c9b "HTTP/1.1 200 OK"
+2026-07-11 23:19:40 [INFO] ibm_watsonx_ai.client: Client successfully initialized
+2026-07-11 23:19:40 [INFO] ibm_watsonx_ai.wml_resource: Project 'df4e6479-e878-4da0-9bc2-5a96ecf73c9b' is already set as the default project. Skipping API request.
+2026-07-11 23:19:40 [INFO] modules.watsonx_client: WatsonxClient initialized with model: ibm/granite-3-1-8b-base
+2026-07-11 23:19:40 [INFO] __main__: Smart Home Energy Advisor v2.0 starting...
+2026-07-11 23:19:40 [INFO] __main__: Granite model status: {'model_id': 'ibm/granite-3-1-8b-base', 'url': 'https://us-south.ml.cloud.ibm.com', 'initialized': True, 'mode': 'live', 'sdk_available': True}
+2026-07-11 23:19:40 [INFO] __main__: Starting server on http://0.0.0.0:5000 (debug=True)
+2026-07-11 23:19:40 [WARNING] werkzeug:  * Debugger is active!
+2026-07-11 23:19:40 [INFO] werkzeug:  * Debugger PIN: 712-599-712
+2026-07-11 23:49:45 [INFO] werkzeug:  * Detected change in 'C:\\Users\\mouni\\Downloads\\bob_ibm\\Smart Home Energy Advisor\\modules\\watsonx_client.py', reloading
+2026-07-11 23:49:45 [INFO] werkzeug:  * Restarting with stat
+2026-07-11 23:49:48 [INFO] httpx: HTTP Request: POST https://iam.cloud.ibm.com/identity/token "HTTP/1.1 200 OK"
+2026-07-11 23:49:49 [INFO] httpx: HTTP Request: GET https://api.dataplatform.cloud.ibm.com/v2/projects/df4e6479-e878-4da0-9bc2-5a96ecf73c9b "HTTP/1.1 200 OK"
+2026-07-11 23:49:49 [INFO] ibm_watsonx_ai.client: Client successfully initialized
+2026-07-11 23:49:49 [INFO] ibm_watsonx_ai.wml_resource: Project 'df4e6479-e878-4da0-9bc2-5a96ecf73c9b' is already set as the default project. Skipping API request.
+2026-07-11 23:49:49 [INFO] modules.watsonx_client: WatsonxClient initialized with model: ibm/granite-3-1-8b-base
+2026-07-11 23:49:49 [INFO] __main__: Smart Home Energy Advisor v2.0 starting...
+2026-07-11 23:49:49 [INFO] __main__: Granite model status: {'model_id': 'ibm/granite-3-1-8b-base', 'url': 'https://us-south.ml.cloud.ibm.com', 'initialized': True, 'mode': 'live', 'sdk_available': True}
+2026-07-11 23:49:49 [INFO] __main__: Starting server on http://0.0.0.0:5000 (debug=True)
+2026-07-11 23:49:49 [WARNING] werkzeug:  * Debugger is active!
+2026-07-11 23:49:49 [INFO] werkzeug:  * Debugger PIN: 712-599-712

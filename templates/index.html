@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Home Energy Advisor — Powered by IBM Granite AI</title>
+
+  <!-- Bootstrap 5.3 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet" crossorigin="anonymous" />
+
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+        rel="stylesheet" crossorigin="anonymous" />
+
+  <!-- App Styles -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+
+  <!-- Preconnect for CDN fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════
+     TOP NAVIGATION BAR
+════════════════════════════════════════════════════════════ -->
+<nav class="navbar navbar-expand-lg navbar-app sticky-top" id="mainNav">
+  <div class="container-fluid px-4">
+
+    <!-- Brand -->
+    <a class="navbar-brand d-flex align-items-center gap-2" href="#">
+      <div class="brand-icon">
+        <i class="bi bi-lightning-charge-fill"></i>
+      </div>
+      <div>
+        <span class="brand-title">EnergyAdvisor</span>
+        <span class="brand-sub d-none d-sm-inline">Smart Home AI</span>
+      </div>
+    </a>
+
+    <!-- Right Controls -->
+    <div class="d-flex align-items-center gap-2 ms-auto">
+
+      <!-- AI Status Badge -->
+      <span class="ai-status-badge" id="aiStatusBadge">
+        <span class="status-dot" id="statusDot"></span>
+        <span id="statusText">Connecting…</span>
+      </span>
+
+      <!-- Dark Mode Toggle -->
+      <button class="btn btn-icon" id="themeToggle" title="Toggle dark mode"
+              aria-label="Toggle dark mode">
+        <i class="bi bi-moon-stars-fill" id="themeIcon"></i>
+      </button>
+
+      <!-- Mobile Menu Toggle -->
+      <button class="navbar-toggler border-0" type="button"
+              data-bs-toggle="collapse" data-bs-target="#navMenu"
+              aria-controls="navMenu" aria-expanded="false"
+              aria-label="Toggle navigation">
+        <i class="bi bi-list fs-4"></i>
+      </button>
+    </div>
+
+    <!-- Nav Links -->
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav ms-auto gap-1 mt-2 mt-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" href="#" onclick="showTab('dashboard')">
+            <i class="bi bi-grid-3x3-gap-fill me-1"></i>Dashboard
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#" onclick="showTab('chat')">
+            <i class="bi bi-chat-dots-fill me-1"></i>AI Advisor
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#" onclick="showTab('appliances')">
+            <i class="bi bi-plug-fill me-1"></i>Appliances
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#" onclick="showTab('analytics')">
+            <i class="bi bi-bar-chart-fill me-1"></i>Analytics
+          </a>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════════
+     HERO BANNER
+════════════════════════════════════════════════════════════ -->
+<div class="hero-banner" id="heroBanner">
+  <div class="container-fluid px-4">
+    <div class="row align-items-center">
+      <div class="col-lg-8">
+        <div class="d-flex align-items-center gap-3 mb-2">
+          <h1 class="hero-title mb-0">Smart Home Energy Advisor</h1>
+          <span class="ibm-badge">IBM Granite AI</span>
+        </div>
+        <p class="hero-sub">
+          Powered by <strong>{{ agent_name }}</strong> v{{ agent_version }} &mdash;
+          Analysing your home with <strong>{{ model_id }}</strong>
+        </p>
+      </div>
+      <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+        <div class="d-flex gap-2 justify-content-lg-end flex-wrap">
+          <button class="btn btn-hero" onclick="showTab('chat')">
+            <i class="bi bi-chat-square-dots-fill me-2"></i>Ask {{ agent_name }}
+          </button>
+          <button class="btn btn-hero-outline" onclick="refreshDashboard()">
+            <i class="bi bi-arrow-clockwise me-2"></i>Refresh Data
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     MAIN CONTENT
+════════════════════════════════════════════════════════════ -->
+<main class="main-content">
+  <div class="container-fluid px-4">
+
+    <!-- ─── TAB: DASHBOARD ──────────────────────────────── -->
+    <div id="tab-dashboard" class="tab-pane active">
+
+      <!-- KPI Cards -->
+      <div class="row g-3 mb-4" id="kpiRow">
+        <div class="col-6 col-lg-3">
+          <div class="kpi-card" id="kpi-kwh">
+            <div class="kpi-icon bg-blue"><i class="bi bi-lightning-charge-fill"></i></div>
+            <div class="kpi-body">
+              <div class="kpi-label">Monthly Usage</div>
+              <div class="kpi-value" id="kpiKwh">—</div>
+              <div class="kpi-sub" id="kpiKwhSub">kWh this month</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-lg-3">
+          <div class="kpi-card" id="kpi-cost">
+            <div class="kpi-icon bg-green"><i class="bi bi-currency-dollar"></i></div>
+            <div class="kpi-body">
+              <div class="kpi-label">Est. Monthly Bill</div>
+              <div class="kpi-value" id="kpiCost">—</div>
+              <div class="kpi-sub" id="kpiCostSub">at ₹8/kWh</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-lg-3">
+          <div class="kpi-card" id="kpi-carbon">
+            <div class="kpi-icon bg-teal"><i class="bi bi-tree-fill"></i></div>
+            <div class="kpi-body">
+              <div class="kpi-label">Carbon Footprint</div>
+              <div class="kpi-value" id="kpiCarbon">—</div>
+              <div class="kpi-sub" id="kpiCarbonSub">kg CO₂ this month</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-lg-3">
+          <div class="kpi-card" id="kpi-score">
+            <div class="kpi-icon bg-purple"><i class="bi bi-award-fill"></i></div>
+            <div class="kpi-body">
+              <div class="kpi-label">Efficiency Score</div>
+              <div class="kpi-value" id="kpiScore">—</div>
+              <div class="kpi-sub" id="kpiScoreSub">out of 100</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Row -->
+      <div class="row g-3 mb-4">
+        <!-- Monthly Trend -->
+        <div class="col-lg-8">
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <div>
+                <h6 class="chart-title">12-Month Energy Consumption</h6>
+                <p class="chart-sub">kWh usage vs estimated cost</p>
+              </div>
+              <div class="chart-legend" id="monthlyLegend"></div>
+            </div>
+            <div class="chart-wrapper">
+              <canvas id="monthlyChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Category Donut -->
+        <div class="col-lg-4">
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <div>
+                <h6 class="chart-title">Usage by Category</h6>
+                <p class="chart-sub">% of total monthly kWh</p>
+              </div>
+            </div>
+            <div class="chart-wrapper chart-wrapper-sm">
+              <canvas id="categoryChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Peak Usage + Quick Tips -->
+      <div class="row g-3 mb-4">
+        <!-- Hourly Usage -->
+        <div class="col-lg-8">
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <div>
+                <h6 class="chart-title">Hourly Consumption Profile</h6>
+                <p class="chart-sub">Average kWh per hour — weekday vs weekend</p>
+              </div>
+              <div class="d-flex gap-2 align-items-center">
+                <span class="badge-peak on-peak">On-Peak 2–9 PM</span>
+              </div>
+            </div>
+            <div class="chart-wrapper">
+              <canvas id="hourlyChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Peak Summary + Tips -->
+        <div class="col-lg-4">
+          <div class="chart-card h-100">
+            <div class="chart-card-header mb-3">
+              <h6 class="chart-title">⚡ Peak Savings Potential</h6>
+            </div>
+            <div id="peakSummary">
+              <div class="placeholder-glow">
+                <span class="placeholder col-12 mb-2"></span>
+                <span class="placeholder col-8 mb-2"></span>
+                <span class="placeholder col-10"></span>
+              </div>
+            </div>
+            <hr class="divider" />
+            <h6 class="chart-title">💡 Quick Tips</h6>
+            <ul class="tips-list" id="quickTips">
+              <li class="placeholder-glow"><span class="placeholder col-10"></span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Goal Progress -->
+      <div class="row g-3 mb-4">
+        <div class="col-12">
+          <div class="chart-card">
+            <div class="chart-card-header mb-3">
+              <h6 class="chart-title">🎯 Monthly Energy Goals</h6>
+            </div>
+            <div class="row g-3" id="goalRow">
+              <div class="col-md-4">
+                <div class="goal-item">
+                  <div class="goal-header">
+                    <span>kWh Target</span>
+                    <span id="goalKwhVal">—</span>
+                  </div>
+                  <div class="progress goal-progress">
+                    <div class="progress-bar bg-blue" id="goalKwhBar" style="width:0%"></div>
+                  </div>
+                  <div class="goal-foot" id="goalKwhFoot"></div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="goal-item">
+                  <div class="goal-header">
+                    <span>Cost Target</span>
+                    <span id="goalCostVal">—</span>
+                  </div>
+                  <div class="progress goal-progress">
+                    <div class="progress-bar bg-green" id="goalCostBar" style="width:0%"></div>
+                  </div>
+                  <div class="goal-foot" id="goalCostFoot"></div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="goal-item">
+                  <div class="goal-header">
+                    <span>CO₂ Reduction Target</span>
+                    <span id="goalCarbonVal">—</span>
+                  </div>
+                  <div class="progress goal-progress">
+                    <div class="progress-bar bg-teal" id="goalCarbonBar" style="width:0%"></div>
+                  </div>
+                  <div class="goal-foot" id="goalCarbonFoot"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /tab-dashboard -->
+
+    <!-- ─── TAB: CHAT ────────────────────────────────────── -->
+    <div id="tab-chat" class="tab-pane" style="display:none;">
+      <div class="row justify-content-center">
+        <div class="col-xl-9 col-xxl-8">
+          <div class="chat-container">
+
+            <!-- Chat Header -->
+            <div class="chat-header">
+              <div class="d-flex align-items-center gap-3">
+                <div class="agent-avatar">
+                  <i class="bi bi-robot"></i>
+                </div>
+                <div>
+                  <div class="agent-name">{{ agent_name }}</div>
+                  <div class="agent-sub">
+                    Smart Home Energy Advisor &bull; IBM Granite AI
+                    <span class="mode-tag" id="chatModeTag">demo</span>
+                  </div>
+                </div>
+              </div>
+              <button class="btn btn-icon" id="clearChatBtn" title="Clear chat">
+                <i class="bi bi-trash3"></i>
+              </button>
+            </div>
+
+            <!-- Messages -->
+            <div class="chat-messages" id="chatMessages">
+              <!-- Welcome Message -->
+              <div class="msg msg-assistant">
+                <div class="msg-avatar"><i class="bi bi-robot"></i></div>
+                <div class="msg-bubble">
+                  <p>👋 Hi! I'm <strong>{{ agent_name }}</strong>, your Smart Home Energy Advisor.</p>
+                  <p>I've analysed your home's energy data and I'm ready to help you:</p>
+                  <ul>
+                    <li>📊 Understand your consumption patterns</li>
+                    <li>💰 Predict and reduce your electricity bills</li>
+                    <li>🌱 Lower your carbon footprint</li>
+                    <li>⏰ Optimise scheduling for peak/off-peak savings</li>
+                    <li>🏆 Improve your home's efficiency score</li>
+                  </ul>
+                  <p>What would you like to explore today?</p>
+                  <div class="quick-prompts">
+                    <button class="quick-prompt-btn"
+                      onclick="sendQuickPrompt('What is my estimated electricity bill this month?')">
+                      💰 Estimate my bill
+                    </button>
+                    <button class="quick-prompt-btn"
+                      onclick="sendQuickPrompt('Which appliances use the most energy?')">
+                      🔌 Top energy users
+                    </button>
+                    <button class="quick-prompt-btn"
+                      onclick="sendQuickPrompt('How can I reduce my carbon footprint?')">
+                      🌱 Reduce CO₂
+                    </button>
+                    <button class="quick-prompt-btn"
+                      onclick="sendQuickPrompt('When should I run my appliances to save money?')">
+                      ⏰ Peak/off-peak tips
+                    </button>
+                    <button class="quick-prompt-btn"
+                      onclick="sendQuickPrompt('Give me your top 5 energy-saving recommendations.')">
+                      💡 Save energy
+                    </button>
+                    <button class="quick-prompt-btn"
+                      onclick="sendQuickPrompt('What is my home energy efficiency score?')">
+                      🏆 My efficiency score
+                    </button>
+                  </div>
+                </div>
+                <div class="msg-time">Just now</div>
+              </div>
+            </div>
+
+            <!-- Typing Indicator -->
+            <div class="typing-indicator" id="typingIndicator" style="display:none;">
+              <div class="msg-avatar"><i class="bi bi-robot"></i></div>
+              <div class="typing-dots">
+                <span></span><span></span><span></span>
+              </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="chat-input-area">
+              <div class="chat-input-wrapper">
+                <textarea id="chatInput" class="chat-input" rows="1"
+                  placeholder="Ask me about your energy usage, bills, or saving tips…"
+                  maxlength="2000"></textarea>
+                <div class="chat-input-actions">
+                  <span class="char-count" id="charCount">0 / 2000</span>
+                  <button class="btn btn-send" id="sendBtn" onclick="sendMessage()">
+                    <i class="bi bi-send-fill"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="chat-footer-note">
+                <i class="bi bi-info-circle me-1"></i>
+                Powered by IBM Granite AI &mdash; {{ model_id }}
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div><!-- /tab-chat -->
+
+    <!-- ─── TAB: APPLIANCES ──────────────────────────────── -->
+    <div id="tab-appliances" class="tab-pane" style="display:none;">
+      <div class="row g-3 mb-3">
+        <div class="col-12 d-flex justify-content-between align-items-center flex-wrap gap-2">
+          <div>
+            <h5 class="section-title mb-0">Appliance Energy Analytics</h5>
+            <p class="section-sub">Ranked by monthly energy consumption</p>
+          </div>
+          <div class="d-flex gap-2">
+            <select class="form-select form-select-sm filter-select" id="categoryFilter"
+                    onchange="filterAppliances()">
+              <option value="">All Categories</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Appliance Cards Grid -->
+      <div class="row g-3" id="applianceGrid">
+        <div class="col-12 text-center py-5">
+          <div class="spinner-border text-accent" role="status"></div>
+          <p class="mt-3 text-muted">Loading appliance data…</p>
+        </div>
+      </div>
+
+      <!-- Appliance Bar Chart -->
+      <div class="row g-3 mt-1">
+        <div class="col-12">
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <h6 class="chart-title">Appliance Consumption Comparison</h6>
+              <p class="chart-sub">Monthly kWh and estimated cost per appliance</p>
+            </div>
+            <div class="chart-wrapper chart-wrapper-lg">
+              <canvas id="applianceChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /tab-appliances -->
+
+    <!-- ─── TAB: ANALYTICS ──────────────────────────────── -->
+    <div id="tab-analytics" class="tab-pane" style="display:none;">
+
+      <!-- ╔══════════════════════════════════════════════════╗
+           ║  ELECTRICITY BILL CALCULATOR (Meter Reading)    ║
+           ╚══════════════════════════════════════════════════╝ -->
+      <div class="row g-3 mb-4">
+        <div class="col-12">
+          <div class="chart-card bill-calc-card">
+            <div class="chart-card-header mb-3">
+              <div>
+                <h6 class="chart-title">🧾 Electricity Bill Calculator — From Your Meter</h6>
+                <p class="chart-sub">Enter your meter readings and rate to calculate your exact bill</p>
+              </div>
+              <span class="ibm-badge" style="font-size:11px;">Meter Reading</span>
+            </div>
+
+            <!-- How it works note -->
+            <div class="meter-how-box mb-3">
+              <strong>📖 How to read your meter:</strong>
+              Note the reading at the <em>start</em> of the billing period and at the <em>end</em>.
+              Subtract start from end to get <strong>units consumed (kWh)</strong>.
+              Your electricity rate (per unit/kWh) is printed on your electricity bill (e.g. ₹6/unit, ₹8/unit, ₹10/unit).
+            </div>
+
+            <div class="row g-3">
+              <!-- Previous Reading -->
+              <div class="col-sm-6 col-lg-3">
+                <label class="form-label fw-semibold">
+                  <i class="bi bi-lightning text-muted me-1"></i>Previous Reading (kWh)
+                </label>
+                <input type="number" class="form-control" id="prevReading"
+                       placeholder="e.g. 4500" min="0" step="1" />
+                <div class="form-text">Reading at start of billing period</div>
+              </div>
+
+              <!-- Current Reading -->
+              <div class="col-sm-6 col-lg-3">
+                <label class="form-label fw-semibold">
+                  <i class="bi bi-lightning-charge text-warning me-1"></i>Current Reading (kWh)
+                </label>
+                <input type="number" class="form-control" id="currReading"
+                       placeholder="e.g. 5083" min="0" step="1" />
+                <div class="form-text">Reading at end of billing period</div>
+              </div>
+
+              <!-- Rate per Unit -->
+              <div class="col-sm-6 col-lg-3">
+                <label class="form-label fw-semibold">
+                  <i class="bi bi-currency-dollar text-success me-1"></i>Rate per Unit ($/kWh)
+                </label>
+                <input type="number" class="form-control" id="meterRate"
+                       placeholder="e.g. 8.00" min="0.01" max="100.00" step="0.01" value="8" />
+                <div class="form-text">Found on your electricity bill (e.g. ₹6–10/unit)</div>
+              </div>
+
+              <!-- Fixed Charges -->
+              <div class="col-sm-6 col-lg-3">
+                <label class="form-label fw-semibold">
+                  <i class="bi bi-receipt text-secondary me-1"></i>Fixed/Meter Charge ($)
+                </label>
+                <input type="number" class="form-control" id="fixedCharge"
+                       placeholder="e.g. 10.00" min="0" step="0.01" value="0" />
+                <div class="form-text">Monthly service / standing charge</div>
+              </div>
+
+              <!-- Calculate Button -->
+              <div class="col-12">
+                <button class="btn btn-accent w-100 py-2" onclick="calculateMeterBill()">
+                  <i class="bi bi-calculator-fill me-2"></i>Calculate My Electricity Bill
+                </button>
+              </div>
+
+              <!-- Result Box -->
+              <div class="col-12" id="meterResult" style="display:none;">
+                <div class="meter-result-box">
+                  <div class="row g-3 text-center" id="meterResultCards"></div>
+                  <div id="meterBreakdown" class="mt-3"></div>
+                  <div class="meter-tip mt-3" id="meterTip"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rate Calculator (existing) -->
+      <div class="row g-3 mb-4">
+        <div class="col-lg-6">
+          <div class="chart-card">
+            <div class="chart-card-header mb-3">
+              <h6 class="chart-title">⚙️ Dashboard Rate Settings</h6>
+            </div>
+            <div class="row g-3">
+              <div class="col-sm-6">
+                <label class="form-label">Electricity Rate ($/kWh)</label>
+                <input type="number" class="form-control" id="rateInput"
+                       step="0.001" min="0.01" max="2.00" value="0.12" />
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label">Household Size (people)</label>
+                <input type="number" class="form-control" id="householdInput"
+                       step="1" min="1" max="20" value="4" />
+              </div>
+              <div class="col-12">
+                <button class="btn btn-accent w-100" onclick="updateSettings()">
+                  <i class="bi bi-arrow-clockwise me-2"></i>Update Dashboard
+                </button>
+              </div>
+              <div class="col-12" id="calcResult" style="display:none;">
+                <div class="calc-result-box"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Carbon Summary -->
+        <div class="col-lg-6">
+          <div class="chart-card h-100">
+            <div class="chart-card-header mb-3">
+              <h6 class="chart-title">🌍 Carbon Footprint Summary</h6>
+            </div>
+            <div id="carbonSummary">
+              <div class="placeholder-glow">
+                <span class="placeholder col-12 mb-2"></span>
+                <span class="placeholder col-8 mb-2"></span>
+                <span class="placeholder col-10"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Annual Cost Chart -->
+      <div class="row g-3 mb-4">
+        <div class="col-12">
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <div>
+                <h6 class="chart-title">Annual Bill Projection</h6>
+                <p class="chart-sub">Monthly estimated cost across the year</p>
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <span class="annual-total-badge" id="annualTotalBadge">
+                  Annual Total: —
+                </span>
+              </div>
+            </div>
+            <div class="chart-wrapper">
+              <canvas id="annualCostChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Peak vs Off-Peak Breakdown -->
+      <div class="row g-3 mb-4">
+        <div class="col-lg-5">
+          <div class="chart-card">
+            <div class="chart-card-header mb-3">
+              <h6 class="chart-title">⚡ Time-of-Use Breakdown</h6>
+            </div>
+            <div class="chart-wrapper chart-wrapper-sm">
+              <canvas id="touChart"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-7">
+          <div class="chart-card h-100">
+            <div class="chart-card-header mb-3">
+              <h6 class="chart-title">💡 Smart Optimization Opportunities</h6>
+            </div>
+            <div id="optimisationList">
+              <div class="placeholder-glow">
+                <span class="placeholder col-12 mb-2"></span>
+                <span class="placeholder col-9 mb-2"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /tab-analytics -->
+
+  </div><!-- /container-fluid -->
+</main>
+
+<!-- ═══════════════════════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════════════════════ -->
+<footer class="app-footer">
+  <div class="container-fluid px-4">
+    <div class="row align-items-center">
+      <div class="col-md-6">
+        <span class="footer-brand">
+          <i class="bi bi-lightning-charge-fill me-1"></i>
+          Smart Home Energy Advisor
+        </span>
+        &mdash; Powered by <strong>IBM Granite AI</strong> on IBM Cloud
+      </div>
+      <div class="col-md-6 text-md-end mt-2 mt-md-0">
+        <span class="text-muted small">Model: {{ model_id }}</span>
+        &nbsp;|&nbsp;
+        <span class="text-muted small">
+          <span id="footerMode"></span>
+        </span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Toast Container -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastContainer"></div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"
+        crossorigin="anonymous"></script>
+
+<!-- App JS -->
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+</body>
+</html>

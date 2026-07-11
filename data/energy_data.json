@@ -1,0 +1,163 @@
+{
+  "household": {
+    "id": "home_001",
+    "name": "Sample Smart Home",
+    "location": "New York, NY",
+    "household_size": 4,
+    "home_size_sqft": 2100,
+    "electricity_rate": 8.0,
+    "carbon_factor": 0.386,
+    "billing_cycle": "monthly"
+  },
+  "appliances": [
+    {
+      "id": "hvac_001",
+      "name": "HVAC System",
+      "category": "Heating & Cooling",
+      "icon": "thermometer-half",
+      "rated_wattage": 3500,
+      "daily_hours": 8,
+      "efficiency_rating": "B",
+      "smart_enabled": true,
+      "age_years": 5,
+      "monthly_kwh": 840
+    },
+    {
+      "id": "wh_001",
+      "name": "Water Heater",
+      "category": "Water Heating",
+      "icon": "droplet-fill",
+      "rated_wattage": 4500,
+      "daily_hours": 3,
+      "efficiency_rating": "C",
+      "smart_enabled": false,
+      "age_years": 8,
+      "monthly_kwh": 405
+    },
+    {
+      "id": "ref_001",
+      "name": "Refrigerator",
+      "category": "Kitchen",
+      "icon": "box-seam",
+      "rated_wattage": 150,
+      "daily_hours": 24,
+      "efficiency_rating": "A",
+      "smart_enabled": false,
+      "age_years": 3,
+      "monthly_kwh": 108
+    },
+    {
+      "id": "wash_001",
+      "name": "Washing Machine",
+      "category": "Laundry",
+      "icon": "arrow-repeat",
+      "rated_wattage": 500,
+      "daily_hours": 1,
+      "efficiency_rating": "A",
+      "smart_enabled": true,
+      "age_years": 2,
+      "monthly_kwh": 15
+    },
+    {
+      "id": "dry_001",
+      "name": "Clothes Dryer",
+      "category": "Laundry",
+      "icon": "wind",
+      "rated_wattage": 5000,
+      "daily_hours": 1,
+      "efficiency_rating": "C",
+      "smart_enabled": false,
+      "age_years": 6,
+      "monthly_kwh": 150
+    },
+    {
+      "id": "dw_001",
+      "name": "Dishwasher",
+      "category": "Kitchen",
+      "icon": "droplet",
+      "rated_wattage": 1800,
+      "daily_hours": 0.5,
+      "efficiency_rating": "B",
+      "smart_enabled": true,
+      "age_years": 4,
+      "monthly_kwh": 27
+    },
+    {
+      "id": "ev_001",
+      "name": "EV Charger",
+      "category": "Transportation",
+      "icon": "lightning-charge-fill",
+      "rated_wattage": 7200,
+      "daily_hours": 4,
+      "efficiency_rating": "A",
+      "smart_enabled": true,
+      "age_years": 1,
+      "monthly_kwh": 864
+    },
+    {
+      "id": "lt_001",
+      "name": "Lighting (All Rooms)",
+      "category": "Lighting",
+      "icon": "lightbulb-fill",
+      "rated_wattage": 400,
+      "daily_hours": 6,
+      "efficiency_rating": "A",
+      "smart_enabled": true,
+      "age_years": 2,
+      "monthly_kwh": 72
+    },
+    {
+      "id": "pc_001",
+      "name": "Home Office (PC + Monitors)",
+      "category": "Electronics",
+      "icon": "pc-display",
+      "rated_wattage": 300,
+      "daily_hours": 8,
+      "efficiency_rating": "B",
+      "smart_enabled": false,
+      "age_years": 3,
+      "monthly_kwh": 72
+    },
+    {
+      "id": "tv_001",
+      "name": "Entertainment System",
+      "category": "Electronics",
+      "icon": "tv-fill",
+      "rated_wattage": 200,
+      "daily_hours": 5,
+      "efficiency_rating": "B",
+      "smart_enabled": false,
+      "age_years": 4,
+      "monthly_kwh": 30
+    }
+  ],
+  "hourly_usage_kwh": {
+    "weekday": [0.4, 0.3, 0.3, 0.3, 0.4, 0.6, 1.2, 1.8, 1.4, 1.2, 1.1, 1.0,
+                1.1, 1.0, 1.0, 1.1, 1.3, 2.1, 2.8, 2.5, 2.2, 1.8, 1.2, 0.7],
+    "weekend": [0.5, 0.4, 0.3, 0.3, 0.4, 0.5, 0.8, 1.4, 2.0, 2.2, 2.1, 2.0,
+                2.2, 2.0, 1.8, 1.9, 2.1, 2.4, 2.8, 2.6, 2.3, 2.0, 1.6, 1.0]
+  },
+  "monthly_kwh_history": {
+    "Jan": 1420, "Feb": 1180, "Mar": 980, "Apr": 820, "May": 890,
+    "Jun": 1250, "Jul": 1580, "Aug": 1620, "Sep": 1150, "Oct": 870,
+    "Nov": 1050, "Dec": 1390
+  },
+  "peak_hours": {
+    "on_peak": {"start": "14:00", "end": "21:00", "rate_multiplier": 1.5},
+    "off_peak": {"start": "21:00", "end": "14:00", "rate_multiplier": 0.7},
+    "super_off_peak": {"start": "00:00", "end": "06:00", "rate_multiplier": 0.5}
+  },
+  "energy_goals": {
+    "monthly_kwh_target": 1100,
+    "monthly_cost_target": 132,
+    "carbon_reduction_target_pct": 20
+  },
+  "smart_suggestions": [
+    "Shift EV charging to off-peak hours (after 9 PM) to save ~$31/month",
+    "Upgrade water heater to heat pump model — estimated 65% energy reduction",
+    "Install a smart thermostat to reduce HVAC runtime by 15%",
+    "Run dishwasher and washing machine during super off-peak hours (midnight–6 AM)",
+    "Replace clothes dryer with a heat pump dryer for 50% energy savings",
+    "Add insulation to reduce heating/cooling load by up to 25%"
+  ]
+}

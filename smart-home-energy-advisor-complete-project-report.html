@@ -1,0 +1,499 @@
+
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Smart Home Energy Advisor — Project Report</title>
+<style>
+  @page { margin: 20mm 18mm; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "Segoe UI", Arial, sans-serif; font-size: 13px; line-height: 1.65; color: #1a1a2e; background: #fff; max-width: 900px; margin: 0 auto; padding: 32px 24px 60px; }
+
+  /* COVER */
+  .cover { text-align: center; padding: 48px 0 40px; border-bottom: 3px solid #1d4ed8; margin-bottom: 36px; }
+  .cover-icon { font-size: 56px; margin-bottom: 12px; }
+  .cover h1 { font-size: 30px; font-weight: 800; color: #1d4ed8; letter-spacing: -0.5px; margin-bottom: 6px; }
+  .cover h2 { font-size: 16px; font-weight: 400; color: #475569; margin-bottom: 20px; }
+  .cover-badges { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 20px; }
+  .cb { background: #dbeafe; color: #1d4ed8; border: 1px solid #93c5fd; border-radius: 99px; font-size: 11px; font-weight: 600; padding: 3px 12px; }
+  .cb.green  { background: #d1fae5; color: #065f46; border-color: #6ee7b7; }
+  .cb.purple { background: #ede9fe; color: #5b21b6; border-color: #c4b5fd; }
+  .cb.amber  { background: #fef3c7; color: #92400e; border-color: #fcd34d; }
+  .cover-meta { font-size: 12px; color: #94a3b8; }
+
+  /* SECTION HEADINGS */
+  h2.sec { font-size: 17px; font-weight: 700; color: #fff; background: #1d4ed8; padding: 8px 16px; border-radius: 6px; margin: 32px 0 14px; page-break-after: avoid; }
+  h3.sub { font-size: 14px; font-weight: 700; color: #1d4ed8; border-left: 4px solid #1d4ed8; padding-left: 10px; margin: 20px 0 8px; page-break-after: avoid; }
+  h4.sub2 { font-size: 13px; font-weight: 600; color: #1f2328; margin: 14px 0 6px; }
+
+  p  { color: #374151; margin-bottom: 8px; font-size: 13px; }
+  ul { padding-left: 20px; margin-bottom: 8px; }
+  li { color: #374151; margin-bottom: 3px; font-size: 13px; }
+  strong { color: #1f2328; }
+
+  /* TABLES */
+  table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 10px 0 16px; page-break-inside: avoid; }
+  th { background: #1d4ed8; color: #fff; padding: 8px 10px; text-align: left; font-weight: 600; }
+  td { padding: 7px 10px; border-bottom: 1px solid #e5e7eb; color: #374151; vertical-align: top; }
+  tr:nth-child(even) td { background: #f8fafc; }
+  tr:last-child td { border-bottom: none; }
+
+  /* CODE */
+  pre, code { font-family: "Cascadia Code", "Consolas", monospace; font-size: 12px; }
+  pre { background: #1e293b; color: #e2e8f0; padding: 14px 16px; border-radius: 6px; overflow-x: auto; margin: 10px 0; line-height: 1.5; page-break-inside: avoid; }
+  code { background: #f0f4f8; padding: 2px 5px; border-radius: 3px; color: #7c3aed; font-size: 11px; }
+
+  /* BOXES */
+  .info-box    { background: #eff6ff; border: 1px solid #93c5fd; border-left: 4px solid #1d4ed8; border-radius: 6px; padding: 12px 14px; margin: 10px 0; font-size: 13px; color: #1e40af; }
+  .success-box { background: #f0fdf4; border: 1px solid #6ee7b7; border-left: 4px solid #059669; border-radius: 6px; padding: 12px 14px; margin: 10px 0; font-size: 13px; color: #065f46; }
+  .warn-box    { background: #fffbeb; border: 1px solid #fcd34d; border-left: 4px solid #d97706; border-radius: 6px; padding: 12px 14px; margin: 10px 0; font-size: 13px; color: #92400e; }
+
+  /* ARCH DIAGRAM */
+  .arch { border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; background: #f8fafc; margin: 10px 0; }
+  .arch-layer { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px dashed #e5e7eb; flex-wrap: wrap; }
+  .arch-layer:last-child { border-bottom: none; }
+  .arch-box { background: #1d4ed8; color: #fff; padding: 6px 14px; border-radius: 5px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+  .arch-box.g { background: #059669; }
+  .arch-box.p { background: #7c3aed; }
+  .arch-box.a { background: #d97706; }
+  .arch-box.s { background: #475569; }
+  .arch-label { font-size: 12px; color: #57606a; }
+  .arch-arrow { color: #1d4ed8; font-size: 16px; }
+
+  /* FEATURE GRID */
+  .feat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 10px 0; }
+  .feat-card { background: #f8fafc; border: 1px solid #e5e7eb; border-radius: 6px; padding: 12px; page-break-inside: avoid; }
+  .feat-card .fi { font-size: 18px; margin-bottom: 4px; }
+  .feat-card .ft { font-size: 13px; font-weight: 700; color: #1f2328; }
+  .feat-card .fd { font-size: 12px; color: #57606a; margin-top: 3px; }
+
+  /* FILE TREE */
+  .tree { background: #1e293b; color: #e2e8f0; padding: 16px; border-radius: 8px; font-family: monospace; font-size: 12px; line-height: 1.9; }
+  .tree .d { color: #60a5fa; font-weight: 700; }
+  .tree .f { color: #e2e8f0; }
+  .tree .k { color: #a78bfa; font-weight: 700; }
+  .tree .c { color: #94a3b8; font-style: italic; }
+
+  /* STEPS */
+  .steps { counter-reset: s; list-style: none; }
+  .steps li { counter-increment: s; padding: 10px 12px 10px 46px; position: relative; background: #f8fafc; border: 1px solid #e5e7eb; border-radius: 6px; margin-bottom: 6px; font-size: 13px; page-break-inside: avoid; }
+  .steps li::before { content: counter(s); position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 24px; height: 24px; background: #1d4ed8; color: #fff; border-radius: 50%; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+
+  /* PAGE BREAK */
+  .pb { page-break-before: always; }
+
+  /* FOOTER */
+  footer { margin-top: 48px; padding-top: 16px; border-top: 2px solid #e5e7eb; text-align: center; color: #94a3b8; font-size: 12px; }
+
+  /* Print hint */
+  .print-hint { background: #fef3c7; border: 1px solid #fcd34d; border-radius: 6px; padding: 10px 14px; font-size: 12px; color: #92400e; margin-bottom: 24px; text-align: center; }
+  @media print { .print-hint { display: none; } }
+</style>
+</head>
+<body>
+
+
+<div class="print-hint">
+  📄 To save as PDF: Press <strong>Ctrl+P</strong> → Select <strong>"Save as PDF"</strong> → Click Save
+</div>
+
+
+<div class="cover">
+  <div class="cover-icon">⚡</div>
+  <h1>Smart Home Energy Advisor</h1>
+  <h2>AI-Powered Energy Analysis &amp; Optimization Agent</h2>
+  <div class="cover-badges">
+    <span class="cb">Python Flask 3.0</span>
+    <span class="cb">IBM watsonx.ai</span>
+    <span class="cb purple">IBM Granite AI</span>
+    <span class="cb green">Bootstrap 5.3</span>
+    <span class="cb green">Chart.js 4.4</span>
+    <span class="cb amber">Dark Mode</span>
+    <span class="cb amber">₹ INR Support</span>
+    <span class="cb purple">IBM Cloud Lite</span>
+  </div>
+  <div class="cover-meta">
+    Version 2.0  |  Agent: Aria  |  Model: ibm/granite-3-1-8b-base<br />
+    Built with IBM Bob  |  July 2026
+  </div>
+</div>
+
+
+<h2 class="sec">1. Project Overview</h2>
+<p>The <strong>Smart Home Energy Advisor</strong> is a production-ready, AI-powered web application that connects household smart meter data to IBM's <strong>Granite large language models</strong> on <strong>watsonx.ai</strong>. The AI agent — named <em>Aria</em> — analyses energy consumption patterns, predicts electricity bills, identifies energy waste, and delivers personalised recommendations through an interactive chat interface and real-time analytics dashboard.</p>
+
+<p>The application is designed to be <strong>genuinely useful for citizens</strong> — enabling homeowners, tenants, and energy-conscious households to understand and reduce their electricity costs using cutting-edge AI, without needing any technical knowledge.</p>
+
+<div class="info-box">
+  <strong>Key Achievement:</strong> Full IBM Granite AI integration with live watsonx.ai inference, ₹ INR currency support, interactive electricity bill calculator from meter readings, 6 Chart.js visualisations, and a 4-tab responsive SPA — all on IBM Cloud Lite (free tier).
+</div>
+
+
+<h2 class="sec">2. Features</h2>
+
+<div class="feat-grid">
+  <div class="feat-card"><div class="fi">🤖</div><div class="ft">IBM Granite AI Agent</div><div class="fd">Natural language Q&amp;A grounded in real household energy data. Context-aware responses using AGENT_INSTRUCTIONS system prompt. Live inference via watsonx.ai SDK. Intelligent demo fallback mode.</div></div>
+  <div class="feat-card"><div class="fi">📊</div><div class="ft">Interactive Dashboard</div><div class="fd">4 KPI cards (usage, bill, carbon, score), 12-month trend chart, category donut, hourly profile, peak/off-peak panel, energy goal progress bars.</div></div>
+  <div class="feat-card"><div class="fi">🧾</div><div class="ft">Electricity Bill Calculator</div><div class="fd">Users enter meter readings (previous + current) and ₹/unit rate. Instant calculation of units consumed, energy charge, tax, fixed charges, total bill, and CO₂ footprint.</div></div>
+  <div class="feat-card"><div class="fi">🔌</div><div class="ft">Appliance Analytics</div><div class="fd">10 appliances ranked by monthly kWh, ₹ cost, CO₂, daily usage, efficiency grade (A–F), smart device indicators, category filter.</div></div>
+  <div class="feat-card"><div class="fi">⏰</div><div class="ft">Peak/Off-Peak Optimizer</div><div class="fd">TOU rate breakdown, on-peak/off-peak/super off-peak usage buckets, savings potential calculation, appliance scheduling recommendations.</div></div>
+  <div class="feat-card"><div class="fi">🌱</div><div class="ft">Carbon Footprint Tracker</div><div class="fd">Monthly CO₂ equivalent, annual projection, comparison vs national average, equivalent trees metric, reduction strategies.</div></div>
+  <div class="feat-card"><div class="fi">🏆</div><div class="ft">Efficiency Scoring</div><div class="fd">0–100 score + A+/A/B/C/D/F grade benchmarked against home size and household occupants. Per-appliance efficiency ratings.</div></div>
+  <div class="feat-card"><div class="fi">🎨</div><div class="ft">Modern Responsive UI</div><div class="fd">Bootstrap 5.3, dark/light mode toggle, mobile-friendly, Chart.js interactive charts, typing indicator, markdown-rendered AI responses, toast notifications.</div></div>
+</div>
+
+
+<h2 class="sec pb">3. System Architecture</h2>
+
+<div class="arch">
+  <div class="arch-layer">
+    <div class="arch-box">Browser SPA</div>
+    <span class="arch-arrow">⟷</span>
+    <span class="arch-label">HTML5 + Bootstrap 5.3 + Chart.js 4.4 + Vanilla JS (4 tabs, dark mode, bill calculator)</span>
+  </div>
+  <div class="arch-layer">
+    <span style="font-size:18px;color:#1d4ed8;margin-left:60px">↕</span>
+    <span class="arch-label">REST JSON API (8 endpoints)</span>
+  </div>
+  <div class="arch-layer">
+    <div class="arch-box g">Flask app.py</div>
+    <span class="arch-arrow">→</span>
+    <span class="arch-label">Route handlers, CORS, session management, input validation</span>
+  </div>
+  <div class="arch-layer">
+    <div class="arch-box s">agent_instructions.py</div>
+    <div class="arch-box p">watsonx_client.py</div>
+    <div class="arch-box a">energy_analytics.py</div>
+  </div>
+  <div class="arch-layer">
+    <div class="arch-box" style="background:#0f172a">IBM watsonx.ai<br /><span style="font-size:10px;font-weight:400">granite-3-1-8b-base</span></div>
+    <div class="arch-box s">energy_data.json<br /><span style="font-size:10px;font-weight:400">10 appliances, TOU, history</span></div>
+  </div>
+</div>
+
+<h3 class="sub">Module Responsibilities</h3>
+<table>
+  <tr><th>Module</th><th>Responsibility</th><th>Key Functions</th></tr>
+  <tr><td><code>app.py</code></td><td>Flask application, REST routes, CORS, error handlers</td><td>8 REST endpoints, create_app()</td></tr>
+  <tr><td><code>agent_instructions.py</code></td><td>AI persona, AGENT_INSTRUCTIONS system prompt, prompt builder</td><td>build_chat_prompt(), build_system_prompt()</td></tr>
+  <tr><td><code>watsonx_client.py</code></td><td>IBM Granite model client, generate_text(), demo fallback</td><td>WatsonxClient.chat(), _messages_to_prompt()</td></tr>
+  <tr><td><code>energy_analytics.py</code></td><td>KPI computation, carbon, scoring, peak analysis, dashboard</td><td>build_dashboard(), peak_analysis(), efficiency_score()</td></tr>
+  <tr><td><code>index.html</code></td><td>Single-page application, 4 tabs, bill calculator UI</td><td>Jinja2 template, Bootstrap layout</td></tr>
+  <tr><td><code>app.js</code></td><td>Chart rendering, chat interface, bill calculator logic, dark mode</td><td>calculateMeterBill(), renderKPIs(), sendMessage()</td></tr>
+  <tr><td><code>style.css</code></td><td>All styles, dark/light CSS variables, responsive breakpoints</td><td>CSS custom properties, media queries</td></tr>
+  <tr><td><code>energy_data.json</code></td><td>Sample household dataset — appliances, history, TOU config</td><td>Data source for all analytics</td></tr>
+</table>
+
+
+<h2 class="sec">4. Project File Structure</h2>
+<div class="tree">
+  <div><span class="d">smart-home-energy-advisor/</span></div>
+  <div>  ├── <span class="k">app.py</span> <span class="c">← Flask app + 8 REST endpoints (295 lines)</span></div>
+  <div>  ├── <span class="d">modules/</span></div>
+  <div>  │   ├── <span class="k">agent_instructions.py</span> <span class="c">← AGENT_INSTRUCTIONS + prompt builder (232 lines)</span></div>
+  <div>  │   ├── <span class="k">watsonx_client.py</span> <span class="c">← IBM Granite client + demo fallback (235 lines)</span></div>
+  <div>  │   └── <span class="k">energy_analytics.py</span> <span class="c">← Analytics engine (304 lines)</span></div>
+  <div>  ├── <span class="d">templates/</span></div>
+  <div>  │   └── <span class="k">index.html</span> <span class="c">← SPA: 4 tabs + bill calculator (600+ lines)</span></div>
+  <div>  ├── <span class="d">static/css/</span></div>
+  <div>  │   └── <span class="k">style.css</span> <span class="c">← Full styles + dark mode (870 lines)</span></div>
+  <div>  ├── <span class="d">static/js/</span></div>
+  <div>  │   └── <span class="k">app.js</span> <span class="c">← Charts + chat + bill calculator (1,200 lines)</span></div>
+  <div>  ├── <span class="d">data/</span></div>
+  <div>  │   └── <span class="k">energy_data.json</span> <span class="c">← Sample household dataset</span></div>
+  <div>  ├── <span class="f">.env</span> <span class="c">← Your credentials (never commit)</span></div>
+  <div>  ├── <span class="f">.env.example</span> <span class="c">← Credential template</span></div>
+  <div>  ├── <span class="f">requirements.txt</span> <span class="c">← Python dependencies</span></div>
+  <div>  ├── <span class="f">Procfile</span> <span class="c">← IBM Cloud / gunicorn entry point</span></div>
+  <div>  └── <span class="f">README.md</span> <span class="c">← Full docs + deployment guide</span></div>
+</div>
+
+
+<h2 class="sec pb">5. REST API Reference</h2>
+<table>
+  <tr><th>Method</th><th>Endpoint</th><th>Description</th><th>Response</th></tr>
+  <tr><td>GET</td><td>/</td><td>Serve the SPA index page</td><td>HTML</td></tr>
+  <tr><td>GET</td><td>/api/status</td><td>Health check + AI model status (live/demo)</td><td>JSON</td></tr>
+  <tr><td>GET</td><td>/api/dashboard</td><td>Full analytics: KPIs, charts, peak analysis, goals</td><td>JSON</td></tr>
+  <tr><td>POST</td><td>/api/chat</td><td>IBM Granite chat — accepts message + history array</td><td>JSON</td></tr>
+  <tr><td>GET</td><td>/api/appliances</td><td>Enriched appliance list with cost, carbon, efficiency</td><td>JSON</td></tr>
+  <tr><td>GET</td><td>/api/hourly</td><td>24-hour usage profiles (weekday + weekend)</td><td>JSON</td></tr>
+  <tr><td>GET</td><td>/api/tips</td><td>Pre-computed energy-saving tip strings</td><td>JSON</td></tr>
+  <tr><td>POST</td><td>/api/update-settings</td><td>Override electricity rate and household size</td><td>JSON</td></tr>
+</table>
+
+<h3 class="sub">Chat API — Request / Response</h3>
+<pre>// POST /api/chat
+Request:
+{
+  "message": "Which appliances use the most energy?",
+  "history": [
+    { "role": "user",      "content": "Hello" },
+    { "role": "assistant", "content": "Hi! I'm Aria..." }
+  ]
+}
+
+Response:
+{
+  "success": true,
+  "reply":   "Your top 3 energy consumers are...",
+  "agent":   "Aria",
+  "mode":    "live"   // or "demo"
+}</pre>
+
+
+<h2 class="sec">6. AI Agent — AGENT_INSTRUCTIONS</h2>
+<p>All agent behaviour is controlled by a single constant in <code>modules/agent_instructions.py</code>. This system prompt is injected into every IBM Granite API call.</p>
+
+<h3 class="sub">Key Sections</h3>
+<table>
+  <tr><th>Section</th><th>Purpose</th><th>Example Setting</th></tr>
+  <tr><td>PERSONA &amp; TONE</td><td>Agent personality and communication style</td><td>Warm, approachable, jargon-free</td></tr>
+  <tr><td>CORE CAPABILITIES</td><td>What the agent can analyse and advise on</td><td>Bills, carbon, appliances, scheduling</td></tr>
+  <tr><td>RESPONSE FORMAT</td><td>Length, currency format, number formatting</td><td>100–400 words, ₹ symbol, commas</td></tr>
+  <tr><td>ENERGY-SAVING POLICIES</td><td>Domain best practices injected as knowledge</td><td>AC at 24°C, cold-water wash, EV at night</td></tr>
+  <tr><td>SAFETY &amp; BOUNDARIES</td><td>Topic restrictions and safety guardrails</td><td>No wiring advice, no guarantees</td></tr>
+  <tr><td>DATA CONTEXT USAGE</td><td>How to use household data in responses</td><td>Always reference actual numbers</td></tr>
+</table>
+
+<h3 class="sub">Customisation</h3>
+<pre>## Change agent name
+AGENT_NAME = "Aria"   →   AGENT_NAME = "Surya"
+
+## Change tone
+PERSONA &amp; TONE
+- Be formal and technical (for energy engineers)
+
+## Add domain policies
+  Solar Panels:
+  - 1kW rooftop solar generates ~100 units/month in India
+  - Payback period typically 5–7 years with subsidies</pre>
+
+
+<h2 class="sec pb">7. Electricity Bill Calculator (Meter Reading)</h2>
+<p>Located in the <strong>Analytics</strong> tab. Citizens enter their actual meter readings to get an accurate bill estimate — no smart meter required.</p>
+
+<h3 class="sub">Input Fields</h3>
+<table>
+  <tr><th>Field</th><th>Description</th><th>Example</th></tr>
+  <tr><td>Previous Reading (kWh)</td><td>Meter reading at start of billing period</td><td>4500</td></tr>
+  <tr><td>Current Reading (kWh)</td><td>Meter reading at end of billing period</td><td>5083</td></tr>
+  <tr><td>Rate per Unit (₹/kWh)</td><td>Tariff rate from electricity bill</td><td>₹8</td></tr>
+  <tr><td>Fixed/Meter Charge (₹)</td><td>Monthly standing/service charge</td><td>₹50</td></tr>
+</table>
+
+<h3 class="sub">Calculation Formula</h3>
+<pre>Units Consumed  = Current Reading − Previous Reading
+                = 5083 − 4500 = 583 kWh
+
+Energy Charge   = Units × Rate
+                = 583 × ₹8 = ₹4,664
+
+Tax (8%)        = ₹4,664 × 8% = ₹373.12
+
+Total Bill      = Energy Charge + Fixed Charge + Tax
+                = ₹4,664 + ₹50 + ₹373.12 = ₹5,087.12
+
+Carbon Footprint = Units × 0.386 kg/kWh
+                 = 583 × 0.386 = 225.04 kg CO₂
+
+Annual Projection = Total Bill × 12 = ₹61,045.44/year</pre>
+
+<h3 class="sub">Output Provided</h3>
+<ul>
+  <li>✅ 4 stat cards: Units consumed, Total bill (₹), Carbon (kg CO₂), Daily average</li>
+  <li>✅ Full bill breakdown table (energy charge, fixed charge, tax, total)</li>
+  <li>✅ Usage category label (Very Low / Below Average / Average / High)</li>
+  <li>✅ Annual projection</li>
+  <li>✅ Personalised energy-saving tip based on usage level</li>
+</ul>
+
+
+<h2 class="sec">8. Dashboard Charts (Chart.js)</h2>
+<table>
+  <tr><th>Chart ID</th><th>Type</th><th>What It Shows</th></tr>
+  <tr><td>monthlyChart</td><td>Bar + Line</td><td>12-month kWh usage (bars) + estimated ₹ cost (line)</td></tr>
+  <tr><td>categoryChart</td><td>Doughnut</td><td>% energy split by category (HVAC, Kitchen, Laundry…)</td></tr>
+  <tr><td>hourlyChart</td><td>Line (filled)</td><td>24-hour usage profile — weekday vs weekend</td></tr>
+  <tr><td>annualCostChart</td><td>Bar</td><td>Monthly ₹ cost across 12 months (peak month highlighted)</td></tr>
+  <tr><td>touChart</td><td>Pie</td><td>Energy split: on-peak / off-peak / super off-peak hours</td></tr>
+  <tr><td>applianceChart</td><td>Horizontal Bar + Line</td><td>Per-appliance kWh + ₹ cost comparison</td></tr>
+</table>
+<p>All charts support <strong>dark mode</strong> — colours update automatically when the user toggles the theme. Charts are destroyed and re-created on data refresh to prevent canvas reuse errors.</p>
+
+
+<h2 class="sec pb">9. Python Dependencies</h2>
+<table>
+  <tr><th>Package</th><th>Version</th><th>Purpose</th></tr>
+  <tr><td>Flask</td><td>≥3.0.3</td><td>Web framework and REST API server</td></tr>
+  <tr><td>Flask-CORS</td><td>≥4.0.1</td><td>Cross-origin resource sharing</td></tr>
+  <tr><td>python-dotenv</td><td>≥1.0.1</td><td>Load .env credentials securely</td></tr>
+  <tr><td>ibm-watsonx-ai</td><td>≥1.1.2</td><td>IBM Granite model inference SDK</td></tr>
+  <tr><td>ibm-cloud-sdk-core</td><td>≥3.22.0</td><td>IBM Cloud IAM authentication</td></tr>
+  <tr><td>pandas</td><td>≥2.2.2</td><td>Data processing and analytics</td></tr>
+  <tr><td>numpy</td><td>≥1.26.4</td><td>Numerical computations</td></tr>
+  <tr><td>pytz</td><td>≥2024.1</td><td>Timezone handling for peak/off-peak</td></tr>
+  <tr><td>gunicorn</td><td>≥22.0.0</td><td>Production WSGI server</td></tr>
+  <tr><td>Werkzeug</td><td>≥3.0.3</td><td>Flask dependency, security utilities</td></tr>
+</table>
+
+<h3 class="sub">Frontend CDN Libraries</h3>
+<table>
+  <tr><th>Library</th><th>Version</th><th>Purpose</th></tr>
+  <tr><td>Bootstrap</td><td>5.3.3</td><td>Responsive UI framework</td></tr>
+  <tr><td>Bootstrap Icons</td><td>1.11.3</td><td>Icon set</td></tr>
+  <tr><td>Chart.js</td><td>4.4.4</td><td>Interactive data visualisations</td></tr>
+  <tr><td>Google Fonts (Inter)</td><td>—</td><td>Typography</td></tr>
+</table>
+
+
+<h2 class="sec">10. Setup &amp; Installation</h2>
+
+<h3 class="sub">Prerequisites</h3>
+<ul>
+  <li>Python 3.11+ (tested on Python 3.14)</li>
+  <li>IBM Cloud account (free Lite tier)</li>
+  <li>IBM watsonx.ai project with Watson Machine Learning (WML) Lite service</li>
+</ul>
+
+<h3 class="sub">Local Installation Steps</h3>
+<ol class="steps">
+  <li>Create and activate virtual environment: <code>python -m venv venv</code> then <code>.\venv\Scripts\activate</code></li>
+  <li>Install all dependencies: <code>pip install -r requirements.txt</code></li>
+  <li>Copy environment template: <code>cp .env.example .env</code></li>
+  <li>Fill in <code>IBM_API_KEY</code> and <code>WATSONX_PROJECT_ID</code> in <code>.env</code></li>
+  <li>Start the server: <code>python app.py</code></li>
+  <li>Open browser at: <code>http://localhost:5000</code></li>
+</ol>
+
+
+<h2 class="sec pb">11. Environment Configuration (.env)</h2>
+<table>
+  <tr><th>Variable</th><th>Required</th><th>Description</th><th>Example</th></tr>
+  <tr><td>IBM_API_KEY</td><td>Yes*</td><td>IBM Cloud API key (from IAM)</td><td>dqBxVYTr…</td></tr>
+  <tr><td>WATSONX_URL</td><td>Yes*</td><td>watsonx.ai service URL</td><td>https://us-south.ml.cloud.ibm.com</td></tr>
+  <tr><td>WATSONX_PROJECT_ID</td><td>Yes*</td><td>watsonx.ai project ID (with WML)</td><td>df4e6479-…</td></tr>
+  <tr><td>WATSONX_MODEL_ID</td><td>No</td><td>Granite model ID</td><td>ibm/granite-3-1-8b-base</td></tr>
+  <tr><td>FLASK_SECRET_KEY</td><td>Yes</td><td>Session signing key (random string)</td><td>abc123xyz…</td></tr>
+  <tr><td>ELECTRICITY_RATE_PER_KWH</td><td>No</td><td>Default rate ₹/kWh</td><td>8.0</td></tr>
+  <tr><td>CARBON_FACTOR_KG_PER_KWH</td><td>No</td><td>kg CO₂ per kWh</td><td>0.82 (India avg)</td></tr>
+  <tr><td>AI_MAX_TOKENS</td><td>No</td><td>Max tokens per AI response</td><td>1024</td></tr>
+  <tr><td>AI_TEMPERATURE</td><td>No</td><td>AI creativity (0=deterministic)</td><td>0.7</td></tr>
+</table>
+<p style="font-size:12px;color:#57606a">* Required for live IBM Granite AI. Without these, app runs in Demo Mode with intelligent pre-built responses.</p>
+
+
+<h2 class="sec">12. IBM Cloud Lite Deployment</h2>
+
+<h3 class="sub">Option A — IBM Cloud Foundry</h3>
+<pre># 1. Install IBM Cloud CLI and login
+ibmcloud login --sso
+ibmcloud target --cf
+
+# 2. Set credentials as environment variables (never in manifest.yml)
+ibmcloud cf set-env smart-home-energy-advisor IBM_API_KEY "your_key"
+ibmcloud cf set-env smart-home-energy-advisor WATSONX_PROJECT_ID "your_id"
+ibmcloud cf set-env smart-home-energy-advisor FLASK_SECRET_KEY "random_string"
+
+# 3. Deploy
+ibmcloud cf push
+
+# 4. Open app
+ibmcloud cf open smart-home-energy-advisor</pre>
+
+<h3 class="sub">Option B — IBM Code Engine (Serverless)</h3>
+<pre>ibmcloud ce application create \
+  --name energy-advisor \
+  --image us.icr.io/namespace/energy-advisor:latest \
+  --port 5000 \
+  --env IBM_API_KEY=your_key \
+  --env WATSONX_PROJECT_ID=your_id</pre>
+
+<h3 class="sub">Production Checklist</h3>
+<table>
+  <tr><th>Item</th><th>Setting</th></tr>
+  <tr><td>Debug mode</td><td>Set <code>FLASK_DEBUG=False</code></td></tr>
+  <tr><td>Secret key</td><td>Use a 32+ character random string</td></tr>
+  <tr><td>Credentials</td><td>Set as platform env vars, never in code</td></tr>
+  <tr><td>.env file</td><td>Never commit to Git (.gitignore included)</td></tr>
+  <tr><td>HTTPS</td><td>Handled automatically by IBM Cloud</td></tr>
+  <tr><td>WSGI server</td><td>gunicorn (configured in Procfile)</td></tr>
+</table>
+
+
+<h2 class="sec pb">13. User Guide — How Citizens Use This App</h2>
+
+<h3 class="sub">4 Main Tabs</h3>
+<table>
+  <tr><th>Tab</th><th>What It Does</th><th>Key Actions</th></tr>
+  <tr><td>📊 Dashboard</td><td>Home energy overview with all charts and KPIs</td><td>View usage, bill, carbon score; track goals</td></tr>
+  <tr><td>🤖 AI Advisor</td><td>Chat with Aria — IBM Granite AI agent</td><td>Ask questions, get personalised advice</td></tr>
+  <tr><td>🔌 Appliances</td><td>All appliances ranked by energy consumption</td><td>Filter by category, see cost per appliance</td></tr>
+  <tr><td>📈 Analytics</td><td>Bill calculator, annual projection, carbon summary</td><td>Enter meter readings, adjust rate</td></tr>
+</table>
+
+<h3 class="sub">What to Ask the AI (Sample Questions)</h3>
+<ul>
+  <li>"What is my estimated electricity bill this month?"</li>
+  <li>"Which appliances use the most energy?"</li>
+  <li>"When is the cheapest time to run my washing machine?"</li>
+  <li>"How can I reduce my carbon footprint?"</li>
+  <li>"Should I install solar panels? Will it save money?"</li>
+  <li>"Give me your top 5 energy saving tips"</li>
+  <li>"What is my home energy efficiency score?"</li>
+  <li>"How much can I save by shifting my AC usage to night?"</li>
+</ul>
+
+<h3 class="sub">Bill Calculator — Step by Step</h3>
+<ol class="steps">
+  <li>Go to <strong>Analytics</strong> tab</li>
+  <li>Find your <strong>meter box</strong> at home — note the reading shown (e.g. 5083)</li>
+  <li>Check last month's bill for the <strong>previous reading</strong> (e.g. 4500)</li>
+  <li>Enter your <strong>₹/unit rate</strong> from your electricity bill (typically ₹6–₹10/unit)</li>
+  <li>Enter your <strong>fixed charge</strong> (monthly meter rental, usually ₹40–₹100)</li>
+  <li>Click <strong>"Calculate My Electricity Bill"</strong></li>
+  <li>Review the breakdown: units consumed, energy charge, tax, total bill, CO₂</li>
+</ol>
+
+
+<h2 class="sec">14. Sample Energy Dataset</h2>
+<p>Located at <code>data/energy_data.json</code> — fully customisable to match any real household.</p>
+
+<h3 class="sub">Appliances in Sample Dataset</h3>
+<table>
+  <tr><th>#</th><th>Appliance</th><th>Category</th><th>Monthly kWh</th><th>Grade</th></tr>
+  <tr><td>1</td><td>EV Charger</td><td>Transportation</td><td>864</td><td>A</td></tr>
+  <tr><td>2</td><td>HVAC System</td><td>Heating &amp; Cooling</td><td>840</td><td>B</td></tr>
+  <tr><td>3</td><td>Water Heater</td><td>Water Heating</td><td>405</td><td>C</td></tr>
+  <tr><td>4</td><td>Clothes Dryer</td><td>Laundry</td><td>150</td><td>C</td></tr>
+  <tr><td>5</td><td>Refrigerator</td><td>Kitchen</td><td>108</td><td>A</td></tr>
+  <tr><td>6</td><td>Lighting</td><td>Lighting</td><td>72</td><td>A</td></tr>
+  <tr><td>7</td><td>Home Office PC</td><td>Electronics</td><td>72</td><td>B</td></tr>
+  <tr><td>8</td><td>Dishwasher</td><td>Kitchen</td><td>27</td><td>B</td></tr>
+  <tr><td>9</td><td>Entertainment System</td><td>Electronics</td><td>30</td><td>B</td></tr>
+  <tr><td>10</td><td>Washing Machine</td><td>Laundry</td><td>15</td><td>A</td></tr>
+</table>
+
+
+<h2 class="sec pb">15. Security Considerations</h2>
+<table>
+  <tr><th>Concern</th><th>Implementation</th></tr>
+  <tr><td>Credential storage</td><td>.env file loaded via python-dotenv; never exposed in code or responses</td></tr>
+  <tr><td>API key exposure</td><td>IBM_API_KEY only read server-side; never sent to browser</td></tr>
+  <tr><td>Input validation</td><td>All POST endpoints validate and sanitise inputs; length limits enforced</td></tr>
+  <tr><td>Chat history sanitisation</td><td>Only 'user' and 'assistant' roles accepted; last 10 turns kept</td></tr>
+  <tr><td>Rate validation</td><td>Electricity rate clamped to ₹0.01–₹100.00 range</td></tr>
+  <tr><td>Error responses</td><td>Generic error messages; stack traces never exposed in production</td></tr>
+  <tr><td>CORS</td><td>Flask-CORS configured for /api/* endpoints only</td></tr>
+  <tr><td>.gitignore</td><td>.env excluded from version control</td></tr>
+</table>
+
+
+<footer>
+  <strong>Smart Home Energy Advisor</strong> — Powered by IBM Granite AI on IBM Cloud<br />
+  Version 2.0  |  Agent: Aria  |  Model: ibm/granite-3-1-8b-base  |  July 2026<br /><br />
+  Made with IBM Bob
+</footer>
+
+</body>
+</html>
