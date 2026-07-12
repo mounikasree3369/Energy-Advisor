@@ -206,7 +206,7 @@ Copy `.env.example` to `.env` and set the following variables:
 | `IBM_API_KEY` | Yes* | IBM Cloud API key |
 | `WATSONX_URL` | Yes* | watsonx.ai service URL (region-specific) |
 | `WATSONX_PROJECT_ID` | Yes* | watsonx.ai project ID |
-| `WATSONX_MODEL_ID` | No | Granite model ID (default: `ibm/granite-3-3-8b-instruct`) |
+| `WATSONX_MODEL_ID` | No | Granite model ID (default: ` ibm/granite-3-1-8b-base`) |
 | `FLASK_SECRET_KEY` | Yes | Long random secret for session signing |
 | `ELECTRICITY_RATE_PER_KWH` | No | Local rate in $/kWh (default: 0.12) |
 | `CARBON_FACTOR_KG_PER_KWH` | No | kg CO₂/kWh emission factor (default: 0.386) |
@@ -240,7 +240,7 @@ Health check and AI model status.
   "agent": "Aria",
   "version": "2.0",
   "timestamp": "2024-01-15T10:30:00Z",
-  "watsonx": { "model_id": "ibm/granite-3-3-8b-instruct", "mode": "live" }
+  "watsonx": { "model_id": " ibm/granite-3-1-8b-base", "mode": "live" }
 }
 ```
 
