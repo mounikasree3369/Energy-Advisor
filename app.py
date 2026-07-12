@@ -287,9 +287,9 @@ def create_app() -> Flask:
 app = create_app()
 
 if __name__ == "__main__":
-    host  = os.getenv("FLASK_HOST", "0.0.0.0")
-    port  = int(os.getenv("FLASK_PORT", 5000))
-    debug = os.getenv("FLASK_DEBUG", "True").lower() == "true"
+    host = "0.0.0.0"
+    port = int(os.environ.get("PORT", 5000))
+    debug = False
 
-    logger.info("Starting server on http://%s:%d (debug=%s)", host, port, debug)
+    logger.info("Starting server on http://%s:%d", host, port)
     app.run(host=host, port=port, debug=debug)
