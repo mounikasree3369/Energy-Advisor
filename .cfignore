@@ -1,0 +1,10 @@
+venv/
+__pycache__/
+*.pyc
+*.pyo
+.env
+.git/
+app_out.txt
+app_err.txt
+smart-home-energy-advisor-complete-project-report.html
+smart-home-energy-advisor-user-guide.html

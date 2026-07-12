@@ -221,8 +221,8 @@ function renderKPIs(data) {
   setText("kpiKwh",       `${kwh.toLocaleString()} kWh`);
   setText("kpiKwhSub",    `${vsPct > 0 ? "+" : ""}${vsPct}% vs US average`);
 
-  setText("kpiCost",      `$${bill.toFixed(2)}`);
-  setText("kpiCostSub",   `at $${rates.base.toFixed(3)}/kWh`);
+  setText("kpiCost",      `₹${bill.toFixed(2)}`);
+  setText("kpiCostSub",   `at ₹${rates.base.toFixed(3)}/kWh`);
 
   setText("kpiCarbon",    `${carbon.toLocaleString()} kg`);
   setText("kpiCarbonSub", "CO₂ equivalent this month");
@@ -299,7 +299,7 @@ function renderMonthlyChart(data) {
           grid: { drawOnChartArea: false },
           ticks: {
             color: tickColour(), font: {size:11},
-            callback: v => "$" + v.toFixed(0),
+            callback: v => "₹" + v.toFixed(0),
           },
         },
         x: {
@@ -432,7 +432,7 @@ function renderAnnualCostChart(data) {
     data: {
       labels: months,
       datasets: [{
-        label: "Monthly Cost ($)",
+        label: "Monthly Cost (₹)",
         data: costs,
         backgroundColor: costs.map(c =>
           c === Math.max(...costs) ? CHART_COLOURS[5] + "cc" : CHART_COLOURS[0] + "cc"
@@ -449,7 +449,7 @@ function renderAnnualCostChart(data) {
           grid: { color: gridColour() },
           ticks: {
             color: tickColour(), font:{size:11},
-            callback: v => "$" + v.toFixed(0),
+            callback: v => "₹" + v.toFixed(0),
           },
         },
         x: {
@@ -869,8 +869,8 @@ function calculateMeterBill() {
         </tr>
         <tr>
           <td>⚡ Energy Charge</td>
-          <td>${unitsConsumed} kWh × $${rate}/kWh</td>
-          <td>$${energyCharge.toFixed(2)}</td>
+          <td>${unitsConsumed} kWh × ₹${rate}/kWh</td>
+          <td>₹${energyCharge.toFixed(2)}</td>
         </tr>
         <tr>
           <td>🔧 Fixed/Meter Charge</td>
@@ -879,8 +879,8 @@ function calculateMeterBill() {
         </tr>
         <tr>
           <td>🏛️ Tax (8%)</td>
-          <td>$${energyCharge.toFixed(2)} × 8%</td>
-          <td>$${taxAmount.toFixed(2)}</td>
+          <td>₹${energyCharge.toFixed(2)} × 8%</td>
+          <td>₹${taxAmount.toFixed(2)}</td>
         </tr>
         <tr>
           <td colspan="2"><strong>💰 Total Bill</strong></td>
@@ -890,7 +890,7 @@ function calculateMeterBill() {
     </table>
     <div style="margin-top:10px;font-size:12px;color:var(--text-muted)">
       Usage category: <strong style="color:${effColor}">${effLabel}</strong>
-      &nbsp;|&nbsp; US average: ~875 kWh/month
+      &nbsp;|&nbsp; India average: ~90 kWh/month
       &nbsp;|&nbsp; Annual projection: <strong>~₹${(totalBill * 12).toFixed(0)}/year</strong>
     </div>
   `;
@@ -899,11 +899,11 @@ function calculateMeterBill() {
   const tipEl = document.getElementById("meterTip");
   let tip = "";
   if (unitsConsumed > 1500) {
-    tip = `⚠️ Your usage of ${unitsConsumed} kWh is significantly above average. Top action: shift EV charging and laundry to off-peak hours (after 9 PM) to potentially save $30–50/month with zero investment.`;
-  } else if (unitsConsumed > 875) {
-    tip = `💡 Your usage is above the US average of 875 kWh/month. Setting your thermostat 2°F closer to outside temperature and using cold-water washing cycles could save ~$15–25/month.`;
-  } else if (unitsConsumed > 400) {
-    tip = `✅ Your usage is at or below average — good work! To go further, consider LED lighting upgrades and smart power strips to eliminate standby power (vampire loads) worth ~$10/month.`;
+    tip = `⚠️ Your usage of ${unitsConsumed} kWh is significantly above average. Top action: shift EV charging and laundry to off-peak hours (after 9 PM) to potentially save ₹500–₹1,500/month with zero investment.`;
+  } else if (unitsConsumed > 300) {
+    tip = `💡 Your usage is above average. Setting your AC 2°C higher and using cold-water washing cycles could save ~₹200–₹500/month.`;
+  } else if (unitsConsumed > 100) {
+    tip = `✅ Your usage is at or below average — good work! To go further, consider LED lighting upgrades and smart power strips to eliminate standby power (vampire loads) worth ~₹100–₹200/month.`;
   } else {
     tip = `🌟 Excellent! Your usage of ${unitsConsumed} kWh is very low. You're already an energy efficiency champion! Consider switching to a green electricity tariff to make your home carbon-neutral.`;
   }
@@ -924,7 +924,7 @@ async function updateSettings() {
   const resultEl = document.getElementById("calcResult");
   const boxEl    = resultEl?.querySelector(".calc-result-box");
 
-  if (isNaN(rate) || rate < 0.01 || rate > 2.0) {
+  if (isNaN(rate) || rate < 0.01 || rate > 20.0) {
     showToast("Rate must be between ₹0.01 and ₹20.00/kWh", "warning");
     return;
   }

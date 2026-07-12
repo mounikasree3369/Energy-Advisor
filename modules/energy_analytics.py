@@ -58,13 +58,14 @@ def efficiency_score(monthly_kwh: float,
         benchmark_kwh = base_per_person × occupants + size_factor × sqft
         score = 100 – clamp(((actual – benchmark) / benchmark) × 100, 0, 100)
     """
-    base_per_person = 120    # kWh / person / month (appliances + lighting)
-    size_factor     = 0.06   # kWh / sqft / month (HVAC & base load)
+    base_per_person = 200    # kWh / person / month (appliances + lighting)
+    size_factor     = 0.25   # kWh / sqft / month (HVAC & base load)
 
-    benchmark = (base_per_person * household_size) + (size_factor * home_size_sqft)
+    benchmark  = (base_per_person * household_size) + (size_factor * home_size_sqft)
+    # Allow up to 2× benchmark before hitting score 0
     delta_pct  = ((monthly_kwh - benchmark) / benchmark) * 100
-    raw_score  = 100 - max(0, min(100, delta_pct))
-    return int(round(raw_score))
+    raw_score  = 100 - max(0.0, min(100.0, delta_pct / 2))
+    return max(0, min(100, int(round(raw_score))))
 
 
 def score_label(score: int) -> str:
@@ -222,7 +223,7 @@ def build_dashboard(data: dict | None = None) -> dict:
     suggestions   = data.get("smart_suggestions", [])
     goals         = data.get("energy_goals", {})
 
-    rate          = float(household.get("electricity_rate", 8.0))
+    rate          = float(household.get("electricity_rate", 8.0))  # ₹/kWh default
     carbon_factor = float(os.getenv("CARBON_FACTOR_KG_PER_KWH", 0.386))
     home_sqft     = int(household.get("home_size_sqft", 2000))
     occupants     = int(household.get("household_size", 4))

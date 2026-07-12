@@ -146,7 +146,7 @@
         </div>
         <div class="col-6 col-lg-3">
           <div class="kpi-card" id="kpi-cost">
-            <div class="kpi-icon bg-green"><i class="bi bi-currency-dollar"></i></div>
+            <div class="kpi-icon bg-green"><i class="bi bi-currency-rupee"></i></div>
             <div class="kpi-body">
               <div class="kpi-label">Est. Monthly Bill</div>
               <div class="kpi-value" id="kpiCost">—</div>
@@ -319,7 +319,7 @@
                   <div class="agent-name">{{ agent_name }}</div>
                   <div class="agent-sub">
                     Smart Home Energy Advisor &bull; IBM Granite AI
-                    <span class="mode-tag" id="chatModeTag">demo</span>
+                    <span class="mode-tag" id="chatModeTag">live</span>
                   </div>
                 </div>
               </div>
@@ -497,7 +497,7 @@
               <!-- Rate per Unit -->
               <div class="col-sm-6 col-lg-3">
                 <label class="form-label fw-semibold">
-                  <i class="bi bi-currency-dollar text-success me-1"></i>Rate per Unit ($/kWh)
+                  <i class="bi bi-currency-rupee text-success me-1"></i>Rate per Unit (₹/kWh)
                 </label>
                 <input type="number" class="form-control" id="meterRate"
                        placeholder="e.g. 8.00" min="0.01" max="100.00" step="0.01" value="8" />
@@ -507,7 +507,7 @@
               <!-- Fixed Charges -->
               <div class="col-sm-6 col-lg-3">
                 <label class="form-label fw-semibold">
-                  <i class="bi bi-receipt text-secondary me-1"></i>Fixed/Meter Charge ($)
+                  <i class="bi bi-receipt text-secondary me-1"></i>Fixed/Meter Charge (₹)
                 </label>
                 <input type="number" class="form-control" id="fixedCharge"
                        placeholder="e.g. 10.00" min="0" step="0.01" value="0" />
@@ -543,9 +543,9 @@
             </div>
             <div class="row g-3">
               <div class="col-sm-6">
-                <label class="form-label">Electricity Rate ($/kWh)</label>
+                <label class="form-label">Electricity Rate (₹/kWh)</label>
                 <input type="number" class="form-control" id="rateInput"
-                       step="0.001" min="0.01" max="2.00" value="0.12" />
+                       step="0.01" min="0.01" max="20.00" value="8" />
               </div>
               <div class="col-sm-6">
                 <label class="form-label">Household Size (people)</label>

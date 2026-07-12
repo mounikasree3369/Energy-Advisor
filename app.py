@@ -239,12 +239,12 @@ def create_app() -> Flask:
         if rate is not None:
             try:
                 r = float(rate)
-                if 0.01 <= r <= 2.0:
+                if 0.01 <= r <= 20.0:
                     energy_data["household"]["electricity_rate"] = r
                     updated.append(f"electricity_rate={r}")
                 else:
                     return jsonify({"success": False,
-                                    "error": "Rate must be between 0.01 and 2.00 $/kWh"}), 400
+                                    "error": "Rate must be between ₹0.01 and ₹20.00/kWh"}), 400
             except (TypeError, ValueError):
                 return jsonify({"success": False, "error": "Invalid rate value"}), 400
 

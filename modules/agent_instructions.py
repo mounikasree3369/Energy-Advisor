@@ -209,7 +209,7 @@ def _format_energy_context(ctx: dict) -> str:
     analytics = ctx.get("analytics", {})
     if analytics:
         lines.append(f"\nCurrent Month Usage: {analytics.get('current_month_kwh', 0):,} kWh")
-        lines.append(f"Estimated Monthly Bill: ${analytics.get('estimated_bill', 0):.2f}")
+        lines.append(f"Estimated Monthly Bill: ₹{analytics.get('estimated_bill', 0):.2f}")
         lines.append(f"Carbon Footprint: {analytics.get('carbon_kg', 0):.1f} kg CO₂")
         lines.append(f"Efficiency Score: {analytics.get('efficiency_score', 'N/A')}/100")
         lines.append(f"vs US Average: {analytics.get('vs_average_pct', 0):+.0f}%")
@@ -220,7 +220,7 @@ def _format_energy_context(ctx: dict) -> str:
         for i, appl in enumerate(top_appliances[:5], 1):
             lines.append(f"  {i}. {appl['name']}: {appl['monthly_kwh']} kWh/month "
                          f"({appl['pct_of_total']:.0f}% of total) — "
-                         f"${appl['monthly_cost']:.2f}/month")
+                         f"₹{appl['monthly_cost']:.2f}/month")
 
     suggestions = ctx.get("smart_suggestions", [])
     if suggestions:

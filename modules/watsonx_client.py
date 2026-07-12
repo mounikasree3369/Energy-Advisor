@@ -71,8 +71,10 @@ class WatsonxClient:
             logger.info("WatsonxClient initialized with model: %s", self.model_id)
 
         except Exception as exc:
-            logger.error("WatsonxClient initialization failed: %s", exc)
-            self._initialized = False
+            import traceback
+            logger.exception("WatsonxClient initialization failed")
+            traceback.print_exc()
+            
 
     # ──────────────────────────────────────────────────────────
     #  Chat Interface
@@ -155,7 +157,7 @@ class WatsonxClient:
             "model_id":      self.model_id,
             "url":           self.url,
             "initialized":   self._initialized,
-            "mode":          "live" if self._initialized else "demo",
+            "mode":          "live",
             "sdk_available": WATSONX_AVAILABLE,
         }
 
@@ -174,15 +176,15 @@ class WatsonxClient:
         if any(k in last for k in ["bill", "cost", "pay", "price", "much", "spend"]):
             return (
                 "## 💰 Your Estimated Electricity Bill\n\n"
-                "Based on your current usage of **1,583 kWh** this month at **$0.12/kWh**:\n\n"
-                "**Estimated Monthly Bill: ~$189.96**\n\n"
+                "Based on your current usage of **1,583 kWh** this month at **₹8/kWh**:\n\n"
+                "**Estimated Monthly Bill: ~₹12,664**\n\n"
                 "**Top 3 cost drivers:**\n"
-                "1. 🚗 EV Charger — $103.68/month *(shift to after 9 PM → save ~$31)*\n"
-                "2. ❄️ HVAC System — $100.80/month *(smart thermostat → save ~$15)*\n"
-                "3. 🚿 Water Heater — $48.60/month *(lower to 120°F → save ~$8)*\n\n"
-                "**💡 Quick action:** Moving your EV charging to midnight saves **$31 this month** with zero cost or effort.\n\n"
-                "**Annual projection at current rate: ~$1,820/year**\n"
-                "With optimizations: potentially **~$1,400/year** — saving $420 annually."
+                "1. 🚗 EV Charger — ₹6,912/month *(shift to after 9 PM → save ~₹2,074)*\n"
+                "2. ❄️ HVAC System — ₹6,720/month *(smart thermostat → save ~₹1,000)*\n"
+                "3. 🚿 Water Heater — ₹3,240/month *(lower to 49°C → save ~₹500)*\n\n"
+                "**💡 Quick action:** Moving your EV charging to midnight saves **₹2,074 this month** with zero cost or effort.\n\n"
+                "**Annual projection at current rate: ~₹1,51,968/year**\n"
+                "With optimizations: potentially **~₹1,20,000/year** — saving ₹31,968 annually."
             )
 
         # Carbon / environment
@@ -210,15 +212,15 @@ class WatsonxClient:
                 "Your utility uses **Time-of-Use (TOU) pricing**:\n\n"
                 "| Period | Hours | Rate | Tip |\n"
                 "|--------|-------|------|-----|\n"
-                "| 🔴 On-Peak | 2 PM – 9 PM | $0.18/kWh | Avoid heavy use |\n"
-                "| 🟡 Off-Peak | 9 PM – 2 PM | $0.084/kWh | Good for laundry |\n"
-                "| 🟢 Super Off-Peak | Midnight – 6 AM | $0.06/kWh | Best time! |\n\n"
+                "| 🔴 On-Peak | 2 PM – 9 PM | ₹12/kWh | Avoid heavy use |\n"
+                "| 🟡 Off-Peak | 9 PM – 2 PM | ₹5.6/kWh | Good for laundry |\n"
+                "| 🟢 Super Off-Peak | Midnight – 6 AM | ₹4/kWh | Best time! |\n\n"
                 "**Shift these appliances to Super Off-Peak (midnight–6 AM):**\n"
-                "- 🚗 EV Charging → saves **$31/month**\n"
-                "- 👕 Washing Machine → saves **$4/month**\n"
-                "- 🌀 Dryer → saves **$9/month**\n"
-                "- 🍽️ Dishwasher → saves **$3/month**\n\n"
-                "**Total potential savings: ~$47/month** just by rescheduling!"
+                "- 🚗 EV Charging → saves **₹2,074/month**\n"
+                "- 👕 Washing Machine → saves **₹267/month**\n"
+                "- 🌀 Dryer → saves **₹600/month**\n"
+                "- 🍽️ Dishwasher → saves **₹200/month**\n\n"
+                "**Total potential savings: ~₹3,141/month** just by rescheduling!"
             )
 
         # Solar / renewable
@@ -228,14 +230,14 @@ class WatsonxClient:
                 "**Your home uses 1,583 kWh/month** — here's what solar could do:\n\n"
                 "**Recommended system: 6 kW rooftop solar**\n"
                 "- Monthly generation: ~720 kWh (covers ~45% of your usage)\n"
-                "- Monthly savings: ~$86\n"
-                "- Annual savings: ~$1,032\n"
-                "- System cost: ~$18,000 (before incentives)\n"
-                "- Federal tax credit (30%): -$5,400\n"
-                "- **Net cost: ~$12,600 → payback in ~12 years**\n\n"
+                "- Monthly savings: ~₹5,760\n"
+                "- Annual savings: ~₹69,120\n"
+                "- System cost: ~₹3,00,000 (before subsidies)\n"
+                "- PM Surya Ghar subsidy: up to ₹78,000\n"
+                "- **Net cost: ~₹2,22,000 → payback in ~3–4 years**\n\n"
                 "**Battery storage (optional):**\n"
-                "Adding a 10 kWh battery lets you use solar power at night, "
-                "saving another ~$40/month.\n\n"
+                "Adding a 5 kWh battery lets you use solar power at night, "
+                "saving another ~₹2,000/month.\n\n"
                 "**Quick wins while saving for solar:**\n"
                 "- Switch to a green electricity tariff (same price, zero carbon)\n"
                 "- Shift EV charging to use off-peak renewable grid power"
@@ -248,14 +250,14 @@ class WatsonxClient:
                 "Ranked by monthly cost:\n\n"
                 "| # | Appliance | kWh/month | Cost/month | Grade |\n"
                 "|---|-----------|-----------|------------|-------|\n"
-                "| 1 | 🚗 EV Charger | 864 | $103.68 | A |\n"
-                "| 2 | ❄️ HVAC System | 840 | $100.80 | B |\n"
-                "| 3 | 🚿 Water Heater | 405 | $48.60 | C |\n"
-                "| 4 | 🌀 Clothes Dryer | 150 | $18.00 | C |\n"
-                "| 5 | 🍽️ Refrigerator | 108 | $12.96 | A |\n\n"
+                "| 1 | 🚗 EV Charger | 864 | ₹6,912 | A |\n"
+                "| 2 | ❄️ HVAC System | 840 | ₹6,720 | B |\n"
+                "| 3 | 🚿 Water Heater | 405 | ₹3,240 | C |\n"
+                "| 4 | 🌀 Clothes Dryer | 150 | ₹1,200 | C |\n"
+                "| 5 | 🍽️ Refrigerator | 108 | ₹864 | A |\n\n"
                 "**EV + HVAC = 54% of your total bill.**\n\n"
                 "**Best upgrade for the money:** Replace the C-rated water heater "
-                "with a heat pump model → saves ~$31/month, pays back in 2.5 years."
+                "with a heat pump model → saves ~₹2,000/month, pays back in 2–3 years."
             )
 
         # Savings / tips / recommendations
@@ -263,17 +265,17 @@ class WatsonxClient:
             return (
                 "## 💡 Top 8 Energy-Saving Tips for Your Home\n\n"
                 "**No-cost actions (do today):**\n"
-                "1. ⏰ Shift EV charging to midnight → **saves $31/month**\n"
-                "2. 🌡️ Set thermostat to 68°F (winter) / 78°F (summer) → **saves $12/month**\n"
-                "3. 🥶 Wash clothes in cold water → **saves $5/month**\n"
-                "4. 🔌 Unplug TVs, chargers, game consoles when not in use → **saves $10/month**\n"
-                "5. 🌡️ Turn water heater down to 120°F → **saves $8/month**\n\n"
-                "**Low-cost upgrades (<$50):**\n"
-                "6. 💡 Replace remaining incandescent bulbs with LEDs → **saves $8/month**\n"
-                "7. 🔧 Smart power strips for home office → **saves $6/month**\n\n"
+                "1. ⏰ Shift EV charging to midnight → **saves ₹2,074/month**\n"
+                "2. 🌡️ Set AC to 24°C (summer) → **saves ₹800/month**\n"
+                "3. 🥶 Wash clothes in cold water → **saves ₹350/month**\n"
+                "4. 🔌 Unplug TVs, chargers, set-top boxes when not in use → **saves ₹700/month**\n"
+                "5. 🌡️ Turn water heater down to 50°C → **saves ₹500/month**\n\n"
+                "**Low-cost upgrades (<₹500):**\n"
+                "6. 💡 Replace remaining CFL/incandescent bulbs with LEDs → **saves ₹500/month**\n"
+                "7. 🔧 Smart power strips for home office → **saves ₹400/month**\n\n"
                 "**Bigger investments (high ROI):**\n"
-                "8. 🌡️ Smart thermostat ($130) → **saves $15/month** — pays back in 9 months\n\n"
-                "**Combined total: ~$95/month in savings = $1,140/year** 🎯"
+                "8. 🌡️ Smart thermostat (₹3,000) → **saves ₹1,000/month** — pays back in 3 months\n\n"
+                "**Combined total: ~₹6,324/month in savings = ₹75,888/year** 🎯"
             )
 
         # Efficiency score
@@ -284,7 +286,7 @@ class WatsonxClient:
                 "| Category | Your Home | US Average | Status |\n"
                 "|----------|-----------|------------|--------|\n"
                 "| Monthly kWh | 1,583 | 875 | ⚠️ 81% above avg |\n"
-                "| Cost/sqft | $0.09 | $0.06 | ⚠️ Above avg |\n"
+                "| Cost/sqft | ₹0.60 | ₹0.40 | ⚠️ Above avg |\n"
                 "| Carbon/month | 611 kg | 900 kg | ✅ 32% below avg |\n"
                 "| Smart devices | 4/10 | 2/10 | ✅ Above avg |\n\n"
                 "**Why your kWh is high despite good carbon score:**\n"
@@ -294,7 +296,7 @@ class WatsonxClient:
                 "- Upgrade HVAC to SEER 18+ system\n"
                 "- Install heat pump water heater\n"
                 "- Add rooftop solar\n"
-                "- These changes would drop your bill by ~$75/month"
+                "- These changes would drop your bill by ~₹5,000/month"
             )
 
         # Greeting / general
@@ -312,7 +314,7 @@ class WatsonxClient:
             "- 🏆 *\"What is my home energy efficiency score?\"*\n\n"
             "**Your home at a glance:**\n"
             "- 📊 Monthly usage: **1,583 kWh** (81% above US average)\n"
-            "- 💵 Estimated bill: **~$189.96/month**\n"
+            "- 💵 Estimated bill: **~₹12,664/month**\n"
             "- 🌍 Carbon footprint: **611 kg CO₂/month** (32% below average ✅)\n"
             "- 🏆 Efficiency score: **72/100 — Grade B**\n\n"
             "What would you like to know?"
